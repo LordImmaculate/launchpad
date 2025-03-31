@@ -12,9 +12,9 @@ import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 import { FaPen } from "react-icons/fa";
+import { useState } from "react";
 
 import { App } from "@/types";
-import { useState } from "react";
 
 type EditAppModalProps = {
   editApp: (
@@ -30,7 +30,6 @@ export default function EditAppModal({ editApp, app }: EditAppModalProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [name, setName] = useState(app.name);
   const [port, setPort] = useState(app.port);
-  const [image, setImage] = useState(app.image);
 
   async function editAppHandler(formData: FormData) {
     const data = Object.fromEntries(formData);
@@ -67,7 +66,7 @@ export default function EditAppModal({ editApp, app }: EditAppModalProps) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add an App
+                Edit &quot;{app.name}&quot;
               </ModalHeader>
               <Form action={editAppHandler}>
                 <ModalBody className="flex w-full gap-4 items-center">

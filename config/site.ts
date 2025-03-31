@@ -1,21 +1,6 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Hero UI Template",
-  description: "A custom HeroUI Template made by LordImmaculate",
-  navItems: [
-    {
-      label: "Home",
-      href: "/"
-    }
-  ],
-  navMenuItems: [
-    {
-      label: "Profile",
-      href: "/home"
-    }
-  ],
-  links: {
-    github: "https://github.com/lordimmaculate"
-  }
+  name: "Apps",
+  description: "An app launcher for your self-hosted apps"
 };

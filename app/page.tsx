@@ -24,7 +24,7 @@ export default async function Home() {
 
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <span className={title()}>Welcome to your new HeroUI project</span>
+      <span className={title()}>Your installed apps</span>
       <div className="flex flex-row items-center gap-4">
         {data.map((app) => (
           <AppLauncher key={app.id} props={{ ...app, domain }} />
