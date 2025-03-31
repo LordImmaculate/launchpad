@@ -15,6 +15,7 @@ import { FaPen } from "react-icons/fa";
 import { useState } from "react";
 
 import { App } from "@/types";
+import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 
 type EditAppModalProps = {
   editApp: (
@@ -23,10 +24,15 @@ type EditAppModalProps = {
     port: number,
     image?: Uint8Array
   ) => Promise<void>;
+  deleteApp: (id: string) => Promise<void>;
   app: App;
 };
 
-export default function EditAppModal({ editApp, app }: EditAppModalProps) {
+export default function EditAppModal({
+  editApp,
+  deleteApp,
+  app
+}: EditAppModalProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [name, setName] = useState(app.name);
   const [port, setPort] = useState(app.port);
@@ -98,9 +104,22 @@ export default function EditAppModal({ editApp, app }: EditAppModalProps) {
                   />
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Close
-                  </Button>
+                  <Popover placement="bottom" showArrow={true}>
+                    <PopoverTrigger>
+                      <Button color="danger" variant="light">
+                        Delete App
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <Button
+                        className="m-1"
+                        color="danger"
+                        onPress={() => deleteApp(app.id)}
+                      >
+                        Are you sure?
+                      </Button>
+                    </PopoverContent>
+                  </Popover>
                   <Button color="primary" type="submit">
                     Edit App
                   </Button>
