@@ -13,9 +13,17 @@ type AppLauncherProps = {
 };
 
 export default function AppLauncher({ props }: AppLauncherProps) {
-  const { name, port, image, domain } = props;
+  const { name, port, image } = props;
   const base64String =
     "data:image/png;base64," + Buffer.from(image).toString("base64");
+
+  let domain = props.domain;
+
+  if (port.toString().includes("443")) {
+    domain = "https://" + domain;
+  } else {
+    domain = "http://" + domain;
+  }
 
   async function editApp(
     id: string,
