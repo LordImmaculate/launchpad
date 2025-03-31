@@ -2,6 +2,7 @@ import { Image } from "@heroui/image";
 import { Link } from "@heroui/link";
 import NextImage from "next/image";
 import { redirect } from "next/navigation";
+import { getAverageColor } from "fast-average-color-node";
 
 import EditAppModal from "./EditAppModal";
 
@@ -12,10 +13,12 @@ type AppLauncherProps = {
   props: App;
 };
 
-export default function AppLauncher({ props }: AppLauncherProps) {
+export default async function AppLauncher({ props }: AppLauncherProps) {
   const { name, port, image } = props;
   const base64String =
     "data:image/png;base64," + Buffer.from(image).toString("base64");
+
+  const averageColor = await getAverageColor(Buffer.from(image));
 
   let domain = props.domain;
 
@@ -59,7 +62,10 @@ export default function AppLauncher({ props }: AppLauncherProps) {
   }
 
   return (
-    <div className="group relative gap-2 border border-default p-2 rounded-xl hover:-translate-y-2 transition-all duration-300 hover:shadow-lg hover:shadow-primary">
+    <div
+      className="group relative gap-2 border border-default p-2 rounded-xl hover:-translate-y-2 transition-all duration-300"
+      style={{ boxShadow: `0px 4px 10px ${averageColor.rgba}` }}
+    >
       <Link isExternal href={`${domain}:${port}`}>
         <Image
           alt={`${name} icon`}
