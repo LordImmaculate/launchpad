@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 export default function Error({
   error,
-  reset,
+  reset
 }: {
   error: Error;
   reset: () => void;
@@ -12,7 +12,7 @@ export default function Error({
   useEffect(() => {
     // Log the error to an error reporting service
     /* eslint-disable no-console */
-    console.error(error);
+    // console.error(error);
   }, [error]);
 
   return (
