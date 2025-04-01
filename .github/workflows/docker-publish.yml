@@ -10,19 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write  # Needed for GitHub Container Registry
+      packages: write  # Required for GitHub Container Registry (GHCR)
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Convert GitHub username to lowercase
+        run: echo "USERNAME=${GITHUB_ACTOR,,}" >> $GITHUB_ENV
+
       - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ env.USERNAME }} --password-stdin
 
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ github.actor }}/launchpad:latest .
+          docker build -t ghcr.io/${{ env.USERNAME }}/lordimmaculate:latest .
 
       - name: Push Docker image to GHCR
         run: |
-          docker push ghcr.io/${{ github.actor }}/launchpad:latest
+          docker push ghcr.io/${{ env.USERNAME }}/lordimmaculate:latest
