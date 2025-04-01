@@ -3,5 +3,4 @@ export type App = {
   name: string;
   port: number;
   image: Uint8Array;
-  domain: string;
 };

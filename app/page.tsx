@@ -5,6 +5,7 @@ import { title } from "@/components/primitives";
 import { prisma } from "@/prisma";
 import AppLauncher from "@/components/AppLauncher";
 import { getDomain } from "@/middleware";
+import { App } from "@/types";
 
 export default async function Home() {
   const data = await prisma.app.findMany();
@@ -26,7 +27,7 @@ export default async function Home() {
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <span className={title()}>Your installed apps</span>
       <div className="flex flex-row items-center gap-4">
-        {data.map((app) => (
+        {data.map((app: App) => (
           <AppLauncher key={app.id} props={{ ...app, domain }} />
         ))}
       </div>

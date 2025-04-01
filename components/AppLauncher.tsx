@@ -10,7 +10,11 @@ import { App } from "@/types";
 import { prisma } from "@/prisma";
 
 type AppLauncherProps = {
-  props: App;
+  props: ExtendedApp;
+};
+
+type ExtendedApp = App & {
+  domain: string;
 };
 
 export default async function AppLauncher({ props }: AppLauncherProps) {
