@@ -18,6 +18,7 @@ COPY . .
 
 # Generate a database
 RUN pnpm prisma migrate deploy
+RUN pnpm prisma generate
 
 # Build Next.js app
 RUN pnpm build
