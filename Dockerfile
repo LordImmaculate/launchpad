@@ -7,8 +7,8 @@ WORKDIR /app
 # Install pnpm globally
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy package manager files
-COPY package.json pnpm-lock.yaml ./
+# Copy package manager files and .env
+COPY package.json pnpm-lock.yaml .env ./
 
 # Install dependencies with pnpm
 RUN pnpm install --frozen-lockfile
