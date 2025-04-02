@@ -8,7 +8,7 @@ on:
       - v*
 
 env:
-  IMAGE_NAME: launchpad
+  IMAGE_NAME: ${{ github.event.repository.name }}
 
 jobs:
   push:
