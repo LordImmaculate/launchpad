@@ -1,31 +1,44 @@
-name: Publish Docker Image to GHCR
+name: Publish to GHCR
 
 on:
   push:
     branches:
       - main
+    tags:
+      - v*
+
+env:
+  IMAGE_NAME: launchpad
 
 jobs:
-  publish:
+  push:
     runs-on: ubuntu-latest
     permissions:
+      packages: write
       contents: read
-      packages: write  # Required for GitHub Container Registry (GHCR)
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Convert GitHub username to lowercase
-        run: echo "USERNAME=${GITHUB_ACTOR,,}" >> $GITHUB_ENV
+      - name: Build image
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
 
-      - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ env.USERNAME }} --password-stdin
-
-      - name: Build Docker image
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        #
+      - name: Push image
         run: |
-          docker build -t ghcr.io/${{ env.USERNAME }}/launchpad:latest .
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
 
-      - name: Push Docker image to GHCR
-        run: |
-          docker push ghcr.io/${{ env.USERNAME }}/launchpad:latest
+          # This changes all uppercase characters to lowercase.
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # This strips the git ref prefix from the version.
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # This strips the "v" prefix from the tag name.
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # This uses the Docker `latest` tag convention.
+          [ "$VERSION" == "main" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
